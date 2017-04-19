@@ -3,8 +3,10 @@ package com.anwesome.ui.leangallery;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.display.DisplayManager;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -47,5 +49,24 @@ public class LeanGalleryLayout extends ViewGroup {
             child.layout(x,h/30,x+child.getMeasuredWidth(),h/30+child.getMeasuredHeight());
             x+=child.getMeasuredHeight()+w/16;
         }
+    }
+    private boolean handleTap(View view,float x,float y) {
+        return x>=view.getX() && x<=view.getX()+view.getMeasuredWidth() && y>=view.getY() && y<=view.getY()+view.getMeasuredHeight();
+    }
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            for(int i=0;i<getChildCount();i++) {
+                View child = getChildAt(i);
+                boolean condition = handleTap(child,event.getX(),event.getY());
+                if(condition && child instanceof ImageView) {
+                    ImageView imageView = (ImageView)child;
+                    BitmapDrawable bitmapDrawable = (BitmapDrawable)imageView.getDrawable();
+                    if(bitmapDrawable!=null) {
+                        Bitmap bitmap = bitmapDrawable.getBitmap();
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
