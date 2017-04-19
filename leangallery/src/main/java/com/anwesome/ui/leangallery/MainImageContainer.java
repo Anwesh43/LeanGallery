@@ -30,7 +30,10 @@ public class MainImageContainer extends ImageView implements Animator.AnimatorLi
         expandAnim.addListener(this);
     }
     public void onAnimationUpdate(ValueAnimator valueAnimator) {
-
+        float scaleVal = (float)valueAnimator.getAnimatedValue();
+        setScaleX(scaleVal);
+        setScaleY(scaleVal);
+        setRotation(360*valueAnimator.getAnimatedFraction());
     }
     public void onAnimationEnd(Animator animator) {
         if(animDir == -1) {
