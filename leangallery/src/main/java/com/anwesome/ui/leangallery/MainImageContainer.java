@@ -13,7 +13,7 @@ public class MainImageContainer extends ImageView implements Animator.AnimatorLi
     private int animDir = 0;
     private Bitmap newBitmap;
     private ValueAnimator expandAnim = ValueAnimator.ofFloat(0,1),shrinkAnim = ValueAnimator.ofFloat(1,0);
-    public void start(Bitmap bitmap) {
+    public void transitionToNewBitmap(Bitmap bitmap) {
         if(animDir == 0) {
             animDir = -1;
             this.newBitmap = bitmap;

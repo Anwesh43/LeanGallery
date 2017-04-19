@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.hardware.display.DisplayManager;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +14,14 @@ import android.widget.ImageView;
  */
 public class LeanGalleryLayout extends ViewGroup {
     private int w,h;
-    public LeanGalleryLayout(Context context) {
+    private ContainerLayout containerLayout;
+    public LeanGalleryLayout(Context context,ContainerLayout containerLayout) {
         super(context);
         initDimension(context);
+        this.containerLayout = containerLayout;
     }
     public void initDimension(Context context) {
-        DisplayManager displayManager = (DisplayManager)context.getSystemService(Context.DISPLAY_SERVICE);
-        Display display = displayManager.getDisplay(0);
-        Point size = new Point();
-        display.getRealSize(size);
+        Point size = DimensionUtil.getDimension(context);
         w = size.x;
         h = size.y;
     }
@@ -41,6 +38,7 @@ public class LeanGalleryLayout extends ViewGroup {
         ImageView imageView = new ImageView(getContext());
         imageView.setImageBitmap(bitmap);
         addView(imageView,new LayoutParams(w/4,h/4));
+        requestLayout();
     }
     public void onLayout(boolean reloaded,int a,int b,int w,int h) {
         int x = w/16;
@@ -63,6 +61,9 @@ public class LeanGalleryLayout extends ViewGroup {
                     BitmapDrawable bitmapDrawable = (BitmapDrawable)imageView.getDrawable();
                     if(bitmapDrawable!=null) {
                         Bitmap bitmap = bitmapDrawable.getBitmap();
+                        if(bitmap!=null) {
+                            containerLayout.changeMainImageContainerBitmap(bitmap);
+                        }
                     }
                 }
             }
