@@ -2,6 +2,7 @@ package com.anwesome.ui.leangallery;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +37,10 @@ public class ContainerLayout extends ViewGroup {
         }
     }
     public void changeMainImageContainerBitmap(Bitmap bitmap) {
-        mainImageContainer.transitionToNewBitmap(Bitmap.createScaledBitmap(bitmap,w,h,true));
+        mainImageContainer.transitionToNewBitmap(bitmap);
     }
     public void addViews() {
+        setBackgroundColor(Color.BLACK);
         addView(mainImageContainer,new LayoutParams(w,h));
         horizontalScrollView.addView(leanGalleryLayout,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         addView(horizontalScrollView,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));

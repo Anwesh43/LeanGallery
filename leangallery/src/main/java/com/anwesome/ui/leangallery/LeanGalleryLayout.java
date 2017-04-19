@@ -29,11 +29,11 @@ public class LeanGalleryLayout extends ViewGroup {
         h = size.y;
     }
     public void onMeasure(int wspec,int hspec) {
-        int wNew = Math.min(w,h)/16;
+        int wNew = Math.min(w,h)/32;
         for(int i=0;i<getChildCount();i++) {
             View child = getChildAt(i);
             measureChild(child,wspec,hspec);
-            wNew += child.getMeasuredWidth()+Math.min(w,h)/16;
+            wNew += child.getMeasuredWidth()+Math.min(w,h)/32;
         }
         setMeasuredDimension(wNew,h);
     }
@@ -44,11 +44,11 @@ public class LeanGalleryLayout extends ViewGroup {
         requestLayout();
     }
     public void onLayout(boolean reloaded,int a,int b,int w,int h) {
-        int x = Math.min(w,h)/16;
+        int x = Math.min(w,h)/32;
         for(int i=0;i<getChildCount();i++) {
             View child = getChildAt(i);
             child.layout(x,h/30,x+child.getMeasuredWidth(),h/30+child.getMeasuredHeight());
-            x+=child.getMeasuredHeight()+Math.min(w,h)/16;
+            x+=child.getMeasuredHeight()+Math.min(w,h)/32;
         }
     }
     private boolean handleTap(View view,float x,float y) {
