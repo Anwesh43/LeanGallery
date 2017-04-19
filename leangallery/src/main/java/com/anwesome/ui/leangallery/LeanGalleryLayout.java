@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,10 @@ import android.widget.ImageView;
 public class LeanGalleryLayout extends ViewGroup {
     private int w,h;
     private ContainerLayout containerLayout;
+    private GestureDetector gestureDetector;
     public LeanGalleryLayout(Context context,ContainerLayout containerLayout) {
         super(context);
+        gestureDetector = new GestureDetector(context,new TapGestureListener());
         initDimension(context);
         this.containerLayout = containerLayout;
     }
@@ -26,13 +29,13 @@ public class LeanGalleryLayout extends ViewGroup {
         h = size.y;
     }
     public void onMeasure(int wspec,int hspec) {
-        int wNew = w/16;
+        int wNew = Math.min(w,h)/16;
         for(int i=0;i<getChildCount();i++) {
             View child = getChildAt(i);
             measureChild(child,wspec,hspec);
-            wNew += child.getMeasuredWidth()+w/16;
+            wNew += child.getMeasuredWidth()+Math.min(w,h)/16;
         }
-        setMeasuredDimension(Math.max(w,wNew),h);
+        setMeasuredDimension(wNew,h);
     }
     public void addImage(Bitmap bitmap) {
         ImageView imageView = new ImageView(getContext());
@@ -41,18 +44,24 @@ public class LeanGalleryLayout extends ViewGroup {
         requestLayout();
     }
     public void onLayout(boolean reloaded,int a,int b,int w,int h) {
-        int x = w/16;
+        int x = Math.min(w,h)/16;
         for(int i=0;i<getChildCount();i++) {
             View child = getChildAt(i);
             child.layout(x,h/30,x+child.getMeasuredWidth(),h/30+child.getMeasuredHeight());
-            x+=child.getMeasuredHeight()+w/16;
+            x+=child.getMeasuredHeight()+Math.min(w,h)/16;
         }
     }
     private boolean handleTap(View view,float x,float y) {
         return x>=view.getX() && x<=view.getX()+view.getMeasuredWidth() && y>=view.getY() && y<=view.getY()+view.getMeasuredHeight();
     }
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+        return gestureDetector.onTouchEvent(event);
+    }
+    private class TapGestureListener extends GestureDetector.SimpleOnGestureListener {
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
+        public boolean onSingleTapUp(MotionEvent event) {
             for(int i=0;i<getChildCount();i++) {
                 View child = getChildAt(i);
                 boolean condition = handleTap(child,event.getX(),event.getY());
@@ -67,7 +76,7 @@ public class LeanGalleryLayout extends ViewGroup {
                     }
                 }
             }
+            return true;
         }
-        return true;
     }
 }
